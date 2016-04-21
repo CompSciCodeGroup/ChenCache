@@ -1,4 +1,4 @@
-include<iostream>
+#include<iostream>
 #include <stdio.h>
 #include <intrin.h>
 #include <time.h> 
@@ -21,6 +21,7 @@ void Optimal();
 void LRU();
 void LFU();
 void ClockAlgorithm();
+void WSClock();
 
 int array_2d(int num, int memory[][2]);
 int nxt_empty(int memory[][2]);
@@ -39,11 +40,14 @@ const int frames = 4;
 int main()
 {
 	int memory[frames][2];
+
 	FileToArray();
+
 	cout << "Numbers counted: " << input << endl << endl;
 	int choice;
+
 	int repeat = 0;
-	cout << "How many time you wanna run this mothafucka?" << endl;
+	cout << "How many time you wanna run?" << endl;
 	cin >> repeat;
 
 	int count = 0;
@@ -55,39 +59,50 @@ int main()
 		cin >> choice;
 		cout << endl;
 
-		if (choice == 1)
-			FIFO();
-		else if (choice == 2)
-			Optimal();
-		else if (choice == 3)
-			LRU();
-		else if (choice == 4)
+		switch (choice)
 		{
-
-			for (int i = 0; i < input; i++)
-			{
-				second_chance(data_array[i], memory);
-				for (int j = 0; j < frames; j++)
+		case 1: 
+				FIFO();
+				break;
+		case 2:
+				Optimal();
+				break;
+		case 3:
+				LRU();
+				break;
+		case 4:
+				for (int i = 0; i < input; i++)
 				{
-					if (memory[j][0] < 0)
+					second_chance(data_array[i], memory);
+
+					for (int j = 0; j < frames; j++)
 					{
-						cout << "0 ";
+						if (memory[j][0] < 0)
+						{
+							cout << "0 ";
+						}
+						else
+						{
+							cout << memory[j][0] << " ";
+						}
 					}
-					else
-					{
-						cout << memory[j][0] << " ";
-					}
+
+					cout << endl;
 				}
-				cout << endl;
-			}
-			cout << pf << endl;
+
+				cout << pf << endl;
+
+				break;
+		case 5:
+				LFU();
+				break;
+		case 6:
+				ClockAlgorithm();
+				break;
+		case 7:
+				cout << "NOT A VALID INPUT" << endl;
+				break;
 		}
-		else if (choice == 5)
-			LFU();
-		else if (choice == 6)
-			ClockAlgorithm();
-		else
-			cout << "NOT A VALID INPUT" << endl;
 
 		cout << "\n___________________________________________________" << endl;
 
@@ -165,39 +180,57 @@ void FIFO()
 		cout << f_arr[0] << "|" << f_arr[1] << "|" << f_arr[2] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl << endl;
+
 	//----------------------------------------------------------------------------------------------------------------------
+
 	pf = 0;
 	front = 0;
 	for (int i = 0; i < count; i++)
 	{
-	int j = 0;
-	while (j < f_counter2)
-	{
-	if (page_array[i][0] == f_arr2[j])
-	{
-	break;
-	}
-	else if (page_array[i][0] != f_arr2[j])
-	{
-	j++;
-	}
-	}
-	if (j >= f_counter2)
-	{
-	f_arr2[front] = page_array[i][0];
-	pf++;
-	front++;
-	if (front >= f_counter2)
-	{
-	front = 0;
-	}
-	}
-	cout << f_arr2[0] << " " << f_arr2[1] << " " << f_arr2[2] << " " << f_arr2[3] << endl;
+		int j = 0;
+		while (j < f_counter2)
+		{
+			if (page_array[i][0] == f_arr2[j])
+			{
+				break;
+			}
+			else if (page_array[i][0] != f_arr2[j])
+			{
+				j++;
+			}
+		}
+		if (j >= f_counter2)
+		{
+			f_arr2[front] = page_array[i][0];
+			pf++;
+			front++;
+			if (front >= f_counter2)
+			{
+				front = 0;
+			}
+		}
+		if (f_arr[0] < 0)
+		{
+			f_arr[0] = -1;
+		}
+		if (f_arr[1] < 0)
+		{
+			f_arr[1] = -1;
+		}
+		if (f_arr[2] < 0)
+		{
+			f_arr[2] = -1;
+		}
+		if (f_arr[3] < 0)
+		{
+			f_arr[3] = -1;
+		}
+		cout << f_arr2[0] << "|" << f_arr2[1] << "|" << f_arr2[2] << "|" << f_arr2[3] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl;
 }
 
-void Optimal() //Runs, but doesn't change values once the frame array is full for some reason
+void Optimal() 
 {
 	int count = 0;
 	int future = 0;
@@ -291,6 +324,10 @@ void Optimal() //Runs, but doesn't change values once the frame array is full fo
 		cout << f_arr[0] << "|" << f_arr[1] << "|" << f_arr[2] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl;
+
+	//---------------------------------------------------------------------------------------------------------
+	pf = 0;
+	
 }
 
 void LRU()
@@ -384,6 +421,10 @@ void LRU()
 		cout << f_arr[0][0] << "|" << f_arr[1][0] << "|" << f_arr[2][0] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl;
+
+	//-----------------------------------------------------------------------------------------------
+
+	pf = 0;
 }
 
 
@@ -472,6 +513,10 @@ void LFU()
 		cout << f_arr[0][0] << "|" << f_arr[1][0] << "|" << f_arr[2][0] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl;
+
+	//--------------------------------------------------------------------------------------------
+
+	pf = 0;
 }
 
 void ClockAlgorithm()
@@ -562,6 +607,104 @@ void ClockAlgorithm()
 		cout << f_arr[0][0] << "|" << f_arr[1][0] << "|" << f_arr[2][0] << endl;
 	}
 	cout << "# of Page Faults: " << pf << endl;
+
+	//-------------------------------------------------------------------------------------------------
+
+	pf = 0;
+}
+
+void WSClock()
+{
+	int count = 0;
+	int min = 12;
+	int f_arr[3][2];
+	int f_arr2[4][2];
+	int f_counter = 3;
+	int f_counter2 = 4;
+	int clock = 0;
+	pf = 0;
+
+	//Sets the first part of page array to equal the stored value array
+	while (data_array[count] != 0)
+	{
+		page_array[count][0] = data_array[count];
+		page_array[count][1] = count;
+		count++;
+	}
+	for (int i = 0; i < count; i++)		//Search function used to find values
+	{
+		int j = 0;
+		while (j < f_counter)
+		{
+			if (data_array[i] == f_arr[j][0])
+			{
+				f_arr[j][1]++;
+				break;
+			}
+			else if (data_array[i] != f_arr[j][0])
+			{
+				j++;
+			}
+		}
+		if (j >= f_counter)
+		{
+			for (int k = 0; k <= f_counter; k++)
+			{
+				if (f_arr[0][0] < 0)
+				{
+					f_arr[0][0] = page_array[i][0];
+					f_arr[0][1] = 1;
+					break;
+				}
+				else if (f_arr[1][0] < 0)
+				{
+					f_arr[1][0] = page_array[i][0];
+					f_arr[1][1] = 1;
+					break;
+				}
+				else if (f_arr[2][0] < 0)
+				{
+					f_arr[2][0] = page_array[i][0];
+					f_arr[2][1] = 1;
+					break;
+				}
+				else
+				{
+					for (clock = 1; clock < input; clock++)
+					{
+						for (int l = 0; l < f_counter; l++)
+						{
+							if (f_arr[l][1] <= clock)
+							{
+								f_arr[l][0] = page_array[i][0];
+								f_arr[l][1] = 1;
+								break;
+							}
+						}
+					}
+				}
+			}
+			pf++;
+		}
+		if (f_arr[0][0] < 0)
+		{
+			f_arr[0][0] = -1;
+		}
+		if (f_arr[1][0] < 0)
+		{
+			f_arr[1][0] = -1;
+		}
+		if (f_arr[2][0] < 0)
+		{
+			f_arr[2][0] = -1;
+		}
+		cout << f_arr[0][0] << "|" << f_arr[1][0] << "|" << f_arr[2][0] << endl;
+	}
+	cout << "# of Page Faults: " << pf << endl;
+
+	//---------------------------------------------------------------------------------------
+
+	pf = 0;
 }
 
 void FileToArray()
